@@ -1,20 +1,52 @@
-import React from 'react';
+// src/App.js
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import Products from './pages/Products';
+import ProductDetails from './pages/ProductDetails';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './admin/Dashboard';
+import NotFound from './pages/NotFound';
 
 const App = () => {
+  const [filters, setFilters] = useState({ brands: [], categories: [] });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-900 text-white flex items-center justify-center px-4">
-      <div className="text-center max-w-xl">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          Welcome to My Landing Page is jwellerz shop
-        </h1>
-        <p className="text-lg md:text-xl mb-8">
-          Your one-stop solution for modern web experiences hi , hellos
-        </p>
-        <button className="bg-white text-blue-800 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300">
-          Get Started
-        </button>
+    <BrowserRouter>
+      <div className="flex">
+        <Navbar
+          onFilterChange={setFilters}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+        />
+
+        <main
+          className={`flex-1 pt-14 px-4 min-h-screen transition-all duration-300 ${
+            sidebarOpen ? 'md:ml-72' : ''
+          }`}
+        >
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products filters={filters} />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
       </div>
-    </div>
+
+      <Footer />
+    </BrowserRouter>
   );
 };
 
