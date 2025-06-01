@@ -1,26 +1,36 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+
+
+import diamondRing from '../assets/diamond-ring.jpg';
+import goldNecklace from '../assets/diamond-ring.jpg';
+import silverBracelet from '../assets/diamond-ring.jpg';
+
+
 const products = [
   {
     id: 1,
     name: 'Diamond Ring',
-    image: 'https://via.placeholder.com/300x200.png?text=Diamond+Ring',
+    image: diamondRing,
     price: '$1200',
   },
   {
     id: 2,
     name: 'Gold Necklace',
-    image: 'https://via.placeholder.com/300x200.png?text=Gold+Necklace',
+    image: goldNecklace,
     price: '$850',
   },
   {
     id: 3,
     name: 'Silver Bracelet',
-    image: 'https://via.placeholder.com/300x200.png?text=Silver+Bracelet',
+    image: silverBracelet,
     price: '$450',
   },
 ];
+
+// ... rest of your Home component
+
 
 const Home = () => {
   return (

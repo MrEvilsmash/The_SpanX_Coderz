@@ -59,11 +59,9 @@ const Navbar = ({ onFilterChange, sidebarOpen, setSidebarOpen }) => {
 
       {/* Sidebar */}
       <aside
-        className={`
-          fixed top-14 left-0 h-[calc(100vh-3.5rem)] w-72 bg-gray-800 text-white shadow-lg z-50
-          transform transition-transform duration-300
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
+        className={`fixed top-14 left-0 h-[calc(100vh-3.5rem)] w-72 bg-gray-800 text-white shadow-lg z-50 transform transition-transform duration-300 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <div className="flex justify-between items-center p-4 border-b border-gray-700">
           <h2 className="text-lg font-semibold">Filters</h2>
@@ -136,7 +134,7 @@ const Navbar = ({ onFilterChange, sidebarOpen, setSidebarOpen }) => {
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="fixed inset-0 bg-black bg-opacity-50 z-4"
         />
       )}
 

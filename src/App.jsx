@@ -1,4 +1,4 @@
-// src/App.js
+// src/App.jsx
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -19,15 +19,17 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <div className="flex">
+      <div className="relative min-h-screen bg-white">
         <Navbar
           onFilterChange={setFilters}
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
         />
 
+        {/* ✅ Removed duplicate overlay */}
+
         <main
-          className={`flex-1 pt-14 px-4 min-h-screen transition-all duration-300 ${
+          className={`relative z-10 pt-14 px-4 transition-all duration-300 ${
             sidebarOpen ? 'md:ml-72' : ''
           }`}
         >
@@ -43,9 +45,9 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
-      </div>
 
-      <Footer />
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 };
