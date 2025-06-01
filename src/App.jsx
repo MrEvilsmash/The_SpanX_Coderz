@@ -8,7 +8,11 @@ const App = () => {
           Welcome to My Landing Page is jwellerz shop
         </h1>
         <p className="text-lg md:text-xl mb-8">
+<<<<<<< HEAD
           Your one-stop solution for modern web experiences hi hello
+=======
+          Your one-stop solution for modern web experiences and fucking
+>>>>>>> 7c2a5c281b854fc117f677fb009a45adc16b6bdb
         </p>
         <button className="bg-white text-blue-800 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300">
           Get Started
