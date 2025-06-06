@@ -1,14 +1,27 @@
-// src/components/Navbar.jsx
-import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { FiMenu, FiX, FiShoppingCart, FiHeart, FiHome, FiGrid } from 'react-icons/fi';
+import React, { useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import {
+  FiMenu,
+  FiX,
+  FiShoppingCart,
+  FiHeart,
+  FiHome,
+  FiGrid,
+  FiFilter,
+} from 'react-icons/fi';
+import { useCart } from '../context/CartContext';
 
-const brands = ['Tanishq', 'Kalyan', 'CaratLane', 'PC Jeweller', 'Malabar Gold'];
-const categories = ['Necklace', 'Ring', 'Earrings', 'Bracelet'];
+const brands = ['Tanishq', 'Malabar Gold', 'GRT', 'PC Jeweller', 'Kalyan', 'CaratLane'];
+const categories = ['Necklace', 'Ring', 'Bracelet', 'Earrings']; 
+// ^ Must exactly match product categories
 
 const Navbar = ({ onFilterChange, sidebarOpen, setSidebarOpen }) => {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const { cartItems } = useCart();
+  const location = useLocation();
+
+  const totalCartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const toggleBrand = (brand) => {
     setSelectedBrands((prev) =>
@@ -22,11 +35,25 @@ const Navbar = ({ onFilterChange, sidebarOpen, setSidebarOpen }) => {
     );
   };
 
-  useEffect(() => {
-    if (onFilterChange) {
-      onFilterChange({ brands: selectedBrands, categories: selectedCategories });
-    }
-  }, [selectedBrands, selectedCategories, onFilterChange]);
+  const applyFilters = () => {
+  console.log('Final Filters Being Sent:', {
+    brands: selectedBrands,
+    categories: selectedCategories
+  });
+  onFilterChange({
+    brands: selectedBrands,
+    categories: selectedCategories
+  });
+  setSidebarOpen(false);
+};
+
+  const resetFilters = () => {
+    setSelectedBrands([]);
+    setSelectedCategories([]);
+    onFilterChange({ brands: [], categories: [] });
+  };
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
     <>
@@ -43,16 +70,31 @@ const Navbar = ({ onFilterChange, sidebarOpen, setSidebarOpen }) => {
         <Link to="/" className="text-xl font-bold tracking-wide">
           Jewellery Shop
         </Link>
+        
 
-        <div className="flex items-center space-x-5 text-xl">
-          <Link to="/favorites" aria-label="Favorites" className="hover:text-yellow-400">
+        <div className="flex items-center space-x-4 text-xl">
+          {location.pathname === '/products' && (
+            <button
+              onClick={toggleSidebar}
+              aria-label="Toggle Filter"
+              className="hover:text-yellow-400"
+              title="Toggle Filter"
+            >
+              <FiFilter />
+            </button>
+          )}
+
+          <Link to="/favourites" aria-label="Favorites" className="hover:text-yellow-400">
             <FiHeart />
           </Link>
+
           <Link to="/cart" aria-label="Cart" className="hover:text-yellow-400 relative">
             <FiShoppingCart />
-            <span className="absolute -top-2 -right-2 bg-yellow-400 text-black rounded-full text-xs px-1 font-bold">
-              3
-            </span>
+            {totalCartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-yellow-400 text-black rounded-full text-xs px-1 font-bold">
+                {totalCartCount}
+              </span>
+            )}
           </Link>
         </div>
       </nav>
@@ -116,54 +158,52 @@ const Navbar = ({ onFilterChange, sidebarOpen, setSidebarOpen }) => {
           </div>
         </div>
 
-        {/* Reset Filters */}
-        <div className="p-4">
+        {/* Buttons */}
+        <div className="p-4 flex space-x-2">
           <button
-            onClick={() => {
-              setSelectedBrands([]);
-              setSelectedCategories([]);
-            }}
-            className="bg-yellow-400 text-gray-900 font-semibold px-4 py-2 rounded hover:bg-yellow-500"
+            onClick={resetFilters}
+            className="bg-yellow-400 text-gray-900 font-semibold px-4 py-2 rounded hover:bg-yellow-500 flex-1"
           >
             Reset Filters
           </button>
+          <button
+            onClick={applyFilters}
+            className="bg-green-500 text-white font-semibold px-4 py-2 rounded hover:bg-green-600 flex-1"
+          >
+            Apply Filters
+          </button>
         </div>
       </aside>
-
-      {/* Overlay */}
-      {sidebarOpen && (
-        <div
-          onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 bg-black bg-opacity-50 z-4"
-        />
-      )}
 
       {/* Bottom Navbar */}
       <nav className="fixed bottom-0 left-0 right-0 bg-gray-900 text-white flex justify-around items-center py-2 px-4 md:hidden z-50 border-t border-gray-700">
         <NavLink
           to="/"
           className={({ isActive }) =>
-            isActive ? 'flex flex-col items-center text-yellow-400' : 'flex flex-col items-center hover:text-yellow-300'
+            isActive
+              ? 'flex flex-col items-center text-yellow-400'
+              : 'flex flex-col items-center hover:text-yellow-300'
           }
         >
           <FiHome size={24} />
           <span className="text-xs mt-1">Home</span>
         </NavLink>
 
-        <NavLink
-          to="/products"
-          className={({ isActive }) =>
-            isActive ? 'flex flex-col items-center text-yellow-400' : 'flex flex-col items-center hover:text-yellow-300'
-          }
+        <button
+          onClick={toggleSidebar}
+          className="flex flex-col items-center hover:text-yellow-300"
+          aria-label="Toggle Filter Sidebar"
         >
           <FiGrid size={24} />
           <span className="text-xs mt-1">Categories</span>
-        </NavLink>
+        </button>
 
         <NavLink
           to="/favorites"
           className={({ isActive }) =>
-            isActive ? 'flex flex-col items-center text-yellow-400' : 'flex flex-col items-center hover:text-yellow-300'
+            isActive
+              ? 'flex flex-col items-center text-yellow-400'
+              : 'flex flex-col items-center hover:text-yellow-300'
           }
         >
           <FiHeart size={24} />
@@ -173,14 +213,18 @@ const Navbar = ({ onFilterChange, sidebarOpen, setSidebarOpen }) => {
         <NavLink
           to="/cart"
           className={({ isActive }) =>
-            isActive ? 'flex flex-col items-center text-yellow-400 relative' : 'flex flex-col items-center hover:text-yellow-300 relative'
+            isActive
+              ? 'flex flex-col items-center text-yellow-400 relative'
+              : 'flex flex-col items-center hover:text-yellow-300 relative'
           }
         >
           <FiShoppingCart size={24} />
           <span className="text-xs mt-1">Cart</span>
-          <span className="absolute top-0 right-3 bg-yellow-400 text-black rounded-full text-xs px-1 font-bold">
-            3
-          </span>
+          {totalCartCount > 0 && (
+            <span className="absolute top-0 right-3 bg-yellow-400 text-black rounded-full text-xs px-1 font-bold">
+              {totalCartCount}
+            </span>
+          )}
         </NavLink>
       </nav>
 
